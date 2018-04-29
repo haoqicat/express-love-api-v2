@@ -8,18 +8,29 @@ import Dialog from './Dialog'
 class Home extends Component {
   state = {
     posts: [],
-    isDialogShown: false
+    isDialogShown: false,
+    id: ''
   }
 
-  openDialog = () => {
+  openDialog = id => {
     this.setState({
+      id,
       isDialogShown: true
     })
   }
 
-  closeDialog = () => {
+  closeDialog = async cancelled => {
     this.setState({
       isDialogShown: false
+    })
+
+    if (cancelled) return
+
+    const { id } = this.state
+    await axios.delete(`${API_SERVER}/post/${id}`)
+    const posts = this.state.posts.filter(post => post._id !== id)
+    this.setState({
+      posts
     })
   }
 
@@ -42,7 +53,11 @@ class Home extends Component {
           <Link className="link" to={`/post/${post._id}/edit`}>
             编辑
           </Link>
-          <Link className="link" to="" onClick={this.openDialog}>
+          <Link
+            className="link"
+            to=""
+            onClick={() => this.openDialog(post._id)}
+          >
             删除
           </Link>
         </div>

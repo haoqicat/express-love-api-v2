@@ -7,10 +7,10 @@ export default ({ isShown, close }) => (
     <div className="dialog">
       确认删除吗？
       <div className="actions">
-        <Link className="action" to="" onClick={close}>
+        <Link className="action" to="" onClick={() => close(false)}>
           确定
         </Link>
-        <Link className="action" to="" onClick={close}>
+        <Link className="action" to="" onClick={() => close(true)}>
           取消
         </Link>
       </div>
