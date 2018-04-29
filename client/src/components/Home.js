@@ -3,10 +3,24 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { API_SERVER } from '../constants/ApiConstants'
+import Dialog from './Dialog'
 
 class Home extends Component {
   state = {
-    posts: []
+    posts: [],
+    isDialogShown: false
+  }
+
+  openDialog = () => {
+    this.setState({
+      isDialogShown: true
+    })
+  }
+
+  closeDialog = () => {
+    this.setState({
+      isDialogShown: false
+    })
   }
 
   async componentDidMount() {
@@ -25,6 +39,12 @@ class Home extends Component {
           <Link className="link" to={`/post/${post._id}`}>
             查看
           </Link>
+          <Link className="link" to={`/post/${post._id}/edit`}>
+            编辑
+          </Link>
+          <Link className="link" to="" onClick={this.openDialog}>
+            删除
+          </Link>
         </div>
       </Card>
     ))
@@ -34,6 +54,7 @@ class Home extends Component {
           写文章
         </Link>
         {postList}
+        <Dialog isShown={this.state.isDialogShown} close={this.closeDialog} />
       </Wrap>
     )
   }
