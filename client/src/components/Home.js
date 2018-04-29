@@ -1,15 +1,74 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { API_SERVER } from '../constants/ApiConstants'
 
-export default () => (
-  <Wrap>
-    <Link className="button" to="/post/new">
-      写文章
-    </Link>
-    Home
-  </Wrap>
-)
+class Home extends Component {
+  state = {
+    posts: []
+  }
+
+  async componentDidMount() {
+    const { data: posts } = await axios.get(`${API_SERVER}/posts`)
+    this.setState({
+      posts
+    })
+  }
+
+  render() {
+    const { posts } = this.state
+    const postList = posts.map(post => (
+      <Card key={post._id}>
+        <div className="title">{post.title}</div>
+        <div className="actions">
+          <Link className="link" to={`/post/${post._id}`}>
+            查看
+          </Link>
+        </div>
+      </Card>
+    ))
+    return (
+      <Wrap>
+        <Link className="button" to="/post/new">
+          写文章
+        </Link>
+        {postList}
+      </Wrap>
+    )
+  }
+}
+export default Home
+
+const Card = styled.div`
+  position: relative;
+  width: 80%;
+  height: 60px;
+  max-width: 600px;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 16px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 6px, rgba(0, 0, 0, 0.12) 0px 1px 4px;
+  .title {
+    font-size: 1.2em;
+  }
+  .actions {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+
+    .link {
+      display: inline-block;
+      font-size: 0.9em;
+      color: #00bcd4;
+      opacity: 0.8;
+      text-decoration: none;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+`
 
 const Wrap = styled.div`
   .button {
